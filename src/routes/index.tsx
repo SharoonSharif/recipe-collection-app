@@ -1,10 +1,13 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
+import { useUser } from '@descope/react-sdk'
 
 export const Route = createFileRoute('/')({
   component: Home,
 })
 
 function Home() {
+  const { user } = useUser()
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50">
       <div className="container mx-auto px-4 py-16">
@@ -38,10 +41,24 @@ function Home() {
         </div>
 
         <div className="text-center">
-          <button className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-8 rounded-lg text-lg transition-colors">
-            Get Started
-          </button>
-          <p className="text-sm text-gray-500 mt-4">Sign in required to access your recipe collection</p>
+          {user ? (
+            <Link 
+              to="/recipes"
+              className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-8 rounded-lg text-lg transition-colors inline-block"
+            >
+              View My Recipes
+            </Link>
+          ) : (
+            <Link 
+              to="/auth"
+              className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-8 rounded-lg text-lg transition-colors inline-block"
+            >
+              Get Started
+            </Link>
+          )}
+          <p className="text-sm text-gray-500 mt-4">
+            {user ? 'Continue managing your recipe collection' : 'Sign in required to access your recipe collection'}
+          </p>
         </div>
       </div>
     </div>
