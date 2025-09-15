@@ -25,7 +25,7 @@ export default defineConfig({
         manualChunks: {
           vendor: ['react', 'react-dom'],
           router: ['@tanstack/react-router'],
-          convex: ['convex/react'],
+          convex: ['convex'],
           auth: ['@descope/react-sdk']
         }
       }
@@ -33,12 +33,6 @@ export default defineConfig({
   },
   preview: {
     port: parseInt(process.env.PORT || '8080'),
-    host: true,
-    allowedHosts: [
-      'recipe-collection-app.up.railway.app',
-      'localhost',
-      '127.0.0.1',
-      '.railway.app'
-    ]
+    host: true
   }
 })

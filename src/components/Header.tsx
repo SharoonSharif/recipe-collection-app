@@ -1,10 +1,11 @@
 import { Link } from '@tanstack/react-router'
-import { useUser, useDescope } from '@descope/react-sdk'
+import { useAuth } from '@/hooks/useAuth'
+import { useDescope } from '@descope/react-sdk'
 import { ChefHat, LogOut, User, Home, BookOpen } from 'lucide-react'
 import { Button } from './ui/button'
 
 export default function Header() {
-  const { user, isUserLoading } = useUser()
+  const { user, isLoading } = useAuth()
   const sdk = useDescope()
 
   const handleLogout = async () => {
@@ -20,7 +21,7 @@ export default function Header() {
   }
 
   // Don't show user info while loading
-  if (isUserLoading) {
+  if (isLoading) {
     return (
       <header className="sticky top-0 z-40 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">

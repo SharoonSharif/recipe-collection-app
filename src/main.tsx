@@ -15,7 +15,7 @@ const router = createRouter()
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ConvexProvider client={convex}>
-      <AuthProvider projectId="P32IOSJNhSnSjWqMWQFI6ax1zmiR">
+      <AuthProvider projectId={import.meta.env.VITE_DESCOPE_PROJECT_ID}>
         <RouterProvider router={router} />
       </AuthProvider>
     </ConvexProvider>
