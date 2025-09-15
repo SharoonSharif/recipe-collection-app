@@ -130,12 +130,12 @@ function RecipesPage() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
 
   const recipes = useQuery(api.recipes.getRecipes, 
-    user ? { userId: user.userId || user.email || '' } : "skip"
+    user ? { userId: user.userId || user.email || user.loginIds?[0] || '' } : "skip"
   )
   
   const searchResults = useQuery(api.recipes.searchRecipes, 
     user && searchTerm ? { 
-      userId: user.userId || user.email || '', 
+      userId: user.userId || user.email || user.loginIds?[0] || '', 
       searchTerm 
     } : "skip"
   )
@@ -208,7 +208,7 @@ function RecipesPage() {
         try {
           await createRecipe({
             ...recipe,
-            userId: user?.userId || user?.email || ''
+            userId: user?.userId || user?.email || user?.loginIds?[0] || ''
           })
           imported++
         } catch (error) {
@@ -317,7 +317,8 @@ Shared from Recipe Vault 🍳
     setToast({ message: 'Recipe copied to clipboard!', type: 'success' })
   }
 
-  if (isUserLoading) {
+  // Loading state
+  if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-amber-50">
         <div className="text-center">
@@ -331,7 +332,8 @@ Shared from Recipe Vault 🍳
     )
   }
 
-  if (!user) {
+  // Authentication check
+  if (!isLoading && !user) {
     return <Navigate to="/auth" />
   }
 

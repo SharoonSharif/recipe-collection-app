@@ -11,15 +11,15 @@ export const Route = createFileRoute('/auth')({
 })
 
 function AuthPage() {
-  const { user, isUserLoading } = useUser()
+  const { user } = useUser()
   const navigate = useNavigate()
 
   // Redirect if already authenticated
   useEffect(() => {
-    if (!isUserLoading && user) {
+    if (user) {
       navigate({ to: '/recipes' })
     }
-  }, [user, isUserLoading, navigate])
+  }, [user, navigate])
 
   const features = [
     "🔒 Bank-level security",
@@ -29,18 +29,6 @@ function AuthPage() {
     "📱 Mobile-friendly design",
     "⚡ Lightning-fast performance"
   ]
-
-  // Show loading state
-  if (isUserLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-amber-50">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-4 border-orange-200 border-t-orange-500 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading...</p>
-        </div>
-      </div>
-    )
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-amber-50 flex items-center justify-center p-4">
@@ -141,10 +129,8 @@ function AuthPage() {
                   theme="light"
                   onSuccess={(e) => {
                     console.log('Authentication successful!', e)
-                    // Use navigate instead of window.location
-                    setTimeout(() => {
-                      navigate({ to: '/recipes' })
-                    }, 100)
+                    // Force reload to update authentication state
+                    window.location.href = '/recipes'
                   }}
                   onError={(err) => {
                     console.error('Authentication error:', err)
