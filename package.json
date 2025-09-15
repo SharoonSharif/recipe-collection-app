@@ -4,10 +4,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev --port 3000",
-    "start": "vite preview --port ${PORT:-3000} --host",
+    "start": "vite preview --host",
     "build": "vite build",
     "preview": "vite preview",
-    "serve": "vite preview --port ${PORT:-3000} --host",
+    "serve": "vite preview --host",
     "test": "vitest run"
   },
   "dependencies": {
