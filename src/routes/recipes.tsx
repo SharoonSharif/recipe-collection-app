@@ -48,6 +48,7 @@ function RecipesPage() {
   const [showAddForm, setShowAddForm] = useState(false)
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
+  const [categoryFilter, setCategoryFilter] = useState('')
 
   const recipes = useQuery(api.recipes.getRecipes, 
     user ? { userId: user.userId || user.email || '' } : "skip"
@@ -63,6 +64,10 @@ function RecipesPage() {
   const createRecipe = useMutation(api.recipes.createRecipe)
   const updateRecipe = useMutation(api.recipes.updateRecipe)
   const deleteRecipe = useMutation(api.recipes.deleteRecipe)
+
+  const categories = Array.from(
+    new Set((recipes || []).map(r => r.category).filter(Boolean)),
+  ) as string[]
 
   if (!user) {
     return (
@@ -80,7 +85,10 @@ function RecipesPage() {
     )
   }
 
-  const displayedRecipes = searchTerm ? (searchResults || []) : (recipes || [])
+  const filteredBySearch = searchTerm ? (searchResults || []) : (recipes || [])
+  const displayedRecipes = categoryFilter
+    ? filteredBySearch.filter(r => r.category === categoryFilter)
+    : filteredBySearch
 
   const handleCreateRecipe = async (recipeData: RecipeFormData) => {
     try {
@@ -130,8 +138,8 @@ function RecipesPage() {
           </button>
         </div>
 
-        {/* Search Bar */}
-        <div className="mb-6">
+        {/* Search & Filter */}
+        <div className="mb-6 flex flex-col gap-4 md:flex-row">
           <input
             type="text"
             placeholder="Search recipes, ingredients, or tags..."
@@ -139,6 +147,18 @@ function RecipesPage() {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent"
           />
+          <select
+            value={categoryFilter}
+            onChange={(e) => setCategoryFilter(e.target.value)}
+            className="w-full md:w-48 px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+          >
+            <option value="">All Categories</option>
+            {categories.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
         </div>
 
         {/* Recipe Grid */}
