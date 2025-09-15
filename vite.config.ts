@@ -34,12 +34,11 @@ export default defineConfig({
   preview: {
     port: parseInt(process.env.PORT || '8080'),
     host: true,
-    // Allow Railway domain and localhost
     allowedHosts: [
       'recipe-collection-app.up.railway.app',
       'localhost',
       '127.0.0.1',
-      '.railway.app' // This allows all railway.app subdomains
+      '.railway.app'
     ]
   }
 })
