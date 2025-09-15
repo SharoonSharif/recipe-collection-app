@@ -1,5 +1,6 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { Descope, useUser } from '@descope/react-sdk'
+import { useEffect } from 'react'
 import { ChefHat, Lock, Sparkles, ArrowLeft } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
 import { Button } from '../components/ui/button'
@@ -10,7 +11,15 @@ export const Route = createFileRoute('/auth')({
 })
 
 function AuthPage() {
-  const { user } = useUser()
+  const { user, isUserLoading } = useUser()
+  const navigate = useNavigate()
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (!isUserLoading && user) {
+      navigate({ to: '/recipes' })
+    }
+  }, [user, isUserLoading, navigate])
 
   const features = [
     "🔒 Bank-level security",
@@ -20,6 +29,18 @@ function AuthPage() {
     "📱 Mobile-friendly design",
     "⚡ Lightning-fast performance"
   ]
+
+  // Show loading state
+  if (isUserLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-amber-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-orange-200 border-t-orange-500 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-amber-50 flex items-center justify-center p-4">
@@ -98,10 +119,19 @@ function AuthPage() {
                 </CardDescription>
                 
                 {user && (
-                  <Badge className="mx-auto mt-4 bg-green-100 text-green-800 border-green-200">
-                    <Lock className="w-3 h-3 mr-1" />
-                    Signed in as {user.email}
-                  </Badge>
+                  <div className="space-y-2">
+                    <Badge className="mx-auto mt-4 bg-green-100 text-green-800 border-green-200">
+                      <Lock className="w-3 h-3 mr-1" />
+                      Signed in as {user.email}
+                    </Badge>
+                    <div className="text-center">
+                      <Link to="/recipes">
+                        <Button className="mt-2">
+                          Go to My Recipes
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
                 )}
               </CardHeader>
               
@@ -110,10 +140,11 @@ function AuthPage() {
                   flowId="sign-up-or-in"
                   theme="light"
                   onSuccess={(e) => {
-                    console.log('Authentication successful!')
+                    console.log('Authentication successful!', e)
+                    // Use navigate instead of window.location
                     setTimeout(() => {
-                      window.location.href = '/recipes'
-                    }, 500)
+                      navigate({ to: '/recipes' })
+                    }, 100)
                   }}
                   onError={(err) => {
                     console.error('Authentication error:', err)

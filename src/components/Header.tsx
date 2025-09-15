@@ -4,16 +4,42 @@ import { ChefHat, LogOut, User, Home, BookOpen } from 'lucide-react'
 import { Button } from './ui/button'
 
 export default function Header() {
-  const { user } = useUser()
+  const { user, isUserLoading } = useUser()
   const sdk = useDescope()
 
   const handleLogout = async () => {
     try {
       await sdk?.logout()
-      window.location.href = '/'
+      // Navigate to home after logout
+      setTimeout(() => {
+        window.location.href = '/'
+      }, 100)
     } catch (error) {
       console.error('Logout failed:', error)
     }
+  }
+
+  // Don't show user info while loading
+  if (isUserLoading) {
+    return (
+      <header className="sticky top-0 z-40 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
+        <div className="container mx-auto flex h-16 items-center justify-between px-4">
+          <nav className="flex items-center gap-6">
+            <Link 
+              to="/" 
+              className="flex items-center gap-2 font-bold text-xl hover:text-orange-600 transition-colors"
+            >
+              <div className="p-2 bg-gradient-to-r from-orange-500 to-amber-500 rounded-lg">
+                <ChefHat className="w-5 h-5 text-white" />
+              </div>
+              <span className="hidden sm:inline bg-gradient-to-r from-orange-600 to-amber-600 bg-clip-text text-transparent">
+                Recipe Vault
+              </span>
+            </Link>
+          </nav>
+        </div>
+      </header>
+    )
   }
 
   return (

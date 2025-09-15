@@ -317,7 +317,7 @@ Shared from Recipe Vault 🍳
     setToast({ message: 'Recipe copied to clipboard!', type: 'success' })
   }
 
-  if (authLoading) {
+  if (isUserLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-amber-50">
         <div className="text-center">
