@@ -1,0 +1,6 @@
+node_modules/
+.env.local
+.env
+dist/
+.convex/
+.DS_Store
