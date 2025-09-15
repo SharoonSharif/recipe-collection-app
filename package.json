@@ -4,9 +4,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev --port 3000",
-    "start": "node .output/server/index.mjs",
+    "start": "vite preview --port ${PORT:-3000} --host",
     "build": "vite build",
-    "serve": "vite preview",
+    "preview": "vite preview",
+    "serve": "vite preview --port ${PORT:-3000} --host",
     "test": "vitest run"
   },
   "dependencies": {
